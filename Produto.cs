@@ -464,6 +464,20 @@ namespace BiltiFulBD
             }
         }
 
+        public void AlterarDataUltimaVenda(string dataUltimaVenda, string codigoProduto)
+        {
+            string linhaProduto = Arquivos.RecuperaLinhaInteira(Arquivos.Produto, codigoProduto, 0, 13);
+            string novoProduto = linhaProduto.Substring(0, 13)
+                               + linhaProduto.Substring(13, 20)
+                               + linhaProduto.Substring(33, 5)
+                               + dataUltimaVenda
+                               + linhaProduto.Substring(46, 8)
+                               + linhaProduto.Substring(54, 1);
+
+            Arquivos.AlterarDocumento(Arquivos.Produto, dataUltimaVenda, codigoProduto, 0, 13, true);
+            Arquivos.AlterarDocumento(Arquivos.Produto, novoProduto, codigoProduto, 0, 13);
+        }
+
         public void Imprimir()
         {
             if (!Arquivos.VerificarArquivoVazio(Arquivos.Produto))

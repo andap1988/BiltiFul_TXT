@@ -202,55 +202,63 @@ namespace BiltiFulBD
             {
                 do
                 {
-                    escolha = null;
-                    Console.Clear();
-                    Console.WriteLine(msgInicial);
-                    Console.WriteLine(msgSaida);
-                    Console.WriteLine(" -------------------------------------------------------------------------\n");
-
-                    Console.WriteLine(" Desejas: \n");
-                    Console.WriteLine(" 1 - Digitar o codigo da venda pra exclusao.");
-                    Console.WriteLine(" 2 - Listar todas as vendas disponiveis para exclusao.");
-                    Console.Write("\n Escolha: ");
-                    escolha = Console.ReadLine();
-
-                    if (escolha != "1" && escolha != "2" && escolha != "9")
+                    flagInterna = true;
+                    do
                     {
-                        Console.WriteLine("\n xxxx Digite apenas '1' ou '2'.");
-                        Console.WriteLine("\n Pressione ENTER para digitar novamente...");
-                        Console.ReadKey();
-                    }
-                    else if (escolha == "9")
-                        return;
-                    else if (escolha == "1")
-                    {
+                        escolha = null;
                         Console.Clear();
                         Console.WriteLine(msgInicial);
                         Console.WriteLine(msgSaida);
                         Console.WriteLine(" -------------------------------------------------------------------------\n");
-                        Console.Write(" Digite o codigo da venda para exclusao: ");
-                        escolha = Console.ReadLine().PadLeft(5, '0');
-                        vendaEscolhida = Arquivos.RecuperaLinhaInteira(Arquivos.Venda, escolha, 0, 5);
-                    }
-                    else if (escolha == "2")
-                    {
-                        Console.Clear();
-                        Console.WriteLine(msgInicial);
-                        Console.WriteLine(msgSaida);
-                        Console.WriteLine(" -------------------------------------------------------------------------\n");
-                        Console.WriteLine("                        ..:: Vendas realizadas ::..");
 
-                        itensArquivo = Arquivos.MontarLista(Arquivos.Venda);
+                        Console.WriteLine(" Desejas: \n");
+                        Console.WriteLine(" 1 - Digitar o codigo da venda pra exclusao.");
+                        Console.WriteLine(" 2 - Listar todas as vendas disponiveis para exclusao.");
+                        Console.Write("\n Escolha: ");
+                        escolha = Console.ReadLine();
 
-                        itensArquivo.ForEach(item =>
+                        if (escolha != "1" && escolha != "2" && escolha != "9")
                         {
-                            MontarVenda(item);
-                        });
+                            Console.WriteLine("\n xxxx Digite apenas '1' ou '2'.");
+                            Console.WriteLine("\n Pressione ENTER para digitar novamente...");
+                            Console.ReadKey();
+                        }
+                        else if (escolha == "9")
+                            return;
+                        else if (escolha == "1")
+                        {
+                            Console.Clear();
+                            Console.WriteLine(msgInicial);
+                            Console.WriteLine(msgSaida);
+                            Console.WriteLine(" -------------------------------------------------------------------------\n");
+                            Console.Write(" Digite o codigo da venda para exclusao: ");
+                            escolha = Console.ReadLine().PadLeft(5, '0');
+                            vendaEscolhida = Arquivos.RecuperaLinhaInteira(Arquivos.Venda, escolha, 0, 5);
+                            flagInterna = false;
+                        }
+                        else if (escolha == "2")
+                        {
+                            Console.Clear();
+                            Console.WriteLine(msgInicial);
+                            Console.WriteLine(msgSaida);
+                            Console.WriteLine(" -------------------------------------------------------------------------\n");
+                            Console.WriteLine("                        ..:: Vendas realizadas ::..");
 
-                        Console.Write(" Digite o codigo da venda para exclusao: ");
-                        escolha = Console.ReadLine().PadLeft(5, '0');
-                        vendaEscolhida = Arquivos.RecuperaLinhaInteira(Arquivos.Venda, escolha, 0, 5);
-                    }                    
+                            itensArquivo = Arquivos.MontarLista(Arquivos.Venda);
+
+                            itensArquivo.ForEach(item =>
+                            {
+                                MontarVenda(item);
+                            });
+
+                            Console.Write(" Digite o codigo da venda para exclusao: ");
+                            escolha = Console.ReadLine().PadLeft(5, '0');
+                            vendaEscolhida = Arquivos.RecuperaLinhaInteira(Arquivos.Venda, escolha, 0, 5);
+                            flagInterna = false;
+                        }
+                    } while (flagInterna);
+
+                    flagInterna = true;
 
                     if (string.IsNullOrEmpty(vendaEscolhida))
                     {
@@ -281,7 +289,14 @@ namespace BiltiFulBD
                             }
                             else if (escolha == "1")
                             {
-                                // fazer a exclusao da venda e dos itens da venda
+                                Arquivos.AlterarDocumento(Arquivos.Venda, vendaEscolhida, vendaEscolhida.Substring(0, 5), 0, 5, true);
+                                Arquivos.AlterarDocumento(Arquivos.ItemVenda, vendaEscolhida, vendaEscolhida.Substring(0, 5), 0, 5, true);
+
+                                Console.WriteLine("\n A venda foi excluida.");
+                                Console.WriteLine("\n Pressione ENTER para voltar...");
+                                Console.ReadKey();
+                                flagInterna = false;
+                                flagPrincipal = false;
                             }
                             else if (escolha == "2")
                             {
@@ -293,8 +308,6 @@ namespace BiltiFulBD
 
                         } while (flagInterna);
                     }
-
-
                 } while (flagPrincipal);
             }
         }

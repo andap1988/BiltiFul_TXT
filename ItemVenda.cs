@@ -389,11 +389,13 @@ namespace BiltiFulBD
                 {
                     cpf = cpf.Replace(".", "").Replace("-", "");
                     Venda vendaFeita = new(idVenda, DateTime.Now.Date, decimal.Parse(cpf), totalVenda);
+                    Produto tempProduto = new();
 
                     Arquivos.DeletarArquivo(Arquivos.IdVenda);
                     Arquivos.Gravar(idVenda.ToString("00000"), Arquivos.IdVenda);
                     itens.ForEach(item =>
                     {
+                        tempProduto.AlterarDataUltimaVenda(DateTime.Now.Date.ToString("dd/MM/yyyy").Replace("/", ""), item.Produto);
                         Arquivos.Gravar(item.ToString(), Arquivos.ItemVenda);
                     });
 
