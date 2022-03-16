@@ -339,6 +339,19 @@ namespace BiltiFulBD
             }
         }
 
+        public void AlterarDataUltimaCompra(string dataUltimaCompra, string codigoMPrima)
+        {
+            string linhaMPrima = Arquivos.RecuperaLinhaInteira(Arquivos.MateriaPrima, codigoMPrima, 0, 6);
+            string novaMPrima = linhaMPrima.Substring(0, 6)
+                               + linhaMPrima.Substring(6, 20)
+                               + dataUltimaCompra
+                               + linhaMPrima.Substring(34, 8)
+                               + linhaMPrima.Substring(42, 1);
+
+            Arquivos.AlterarDocumento(Arquivos.MateriaPrima, dataUltimaCompra, codigoMPrima, 0, 6, true);
+            Arquivos.AlterarDocumento(Arquivos.MateriaPrima, novaMPrima, codigoMPrima, 0, 6);
+        }
+
         public void Imprimir()
         {
             if (!Arquivos.VerificarArquivoVazio(Arquivos.MateriaPrima))

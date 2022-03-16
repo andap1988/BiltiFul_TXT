@@ -5,7 +5,6 @@ namespace BiltiFulBD
 {
     internal class Program
     {
-
         public static int Menus(string name, string[] options)
         {
             int option = 0, i = 1;
@@ -141,6 +140,8 @@ namespace BiltiFulBD
                         option = Menus("Biltiful", new string[] { "Cadastros", "Producao", "Compras", "Vendas" });
                         break;
                     case 3:
+                        Compra compra = new();
+                        compra.Menu();
                         option = Menus("Biltiful", new string[] { "Cadastros", "Producao", "Compras", "Vendas" });
                         break;
                     case 4:

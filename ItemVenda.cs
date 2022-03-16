@@ -40,7 +40,7 @@ namespace BiltiFulBD
         {
             string msgInicial, msgSaida, nomeBusca, codBusca, codProd, nomeProd, produtoEncontrado = null, qtProd, idLinha, escolha;
             decimal valorProd, totalProd = 0, totalVenda = 0;
-            int qt = 0, idVenda, retorno = 0;
+            int qt = 0, idVenda;
             bool flagInterna = true, flagPrincipal = true;
             List<string> produtos = new();
             List<ItemVenda> itens = new();
@@ -83,7 +83,7 @@ namespace BiltiFulBD
                     Console.WriteLine(msgInicial);
                     Console.WriteLine(msgSaida);
                     Console.WriteLine(" -------------------------------------------------------------------------\n");
-                    Console.WriteLine("\n ..:: Produtos Disponiveis ::..\n");
+                    Console.WriteLine(" ..:: Produtos Disponiveis ::..\n");
                     produtos.ForEach(produto =>
                     {
                         Console.WriteLine($" Codigo: {produto.Substring(0, 13)}");
@@ -284,7 +284,7 @@ namespace BiltiFulBD
                                         }
                                         else if (escolha == "9")
                                         {
-                                            Console.WriteLine("\n xxxx Compra cancelada.");
+                                            Console.WriteLine("\n xxxx Venda cancelada.");
                                             Console.WriteLine("\n Pressione ENTER para voltar...");
                                             Console.ReadKey();
                                             return;
@@ -418,7 +418,7 @@ namespace BiltiFulBD
             {
                 string linha = Arquivos.RecuperaLinhaInteira(Arquivos.Produto, item.Produto, 0, 13);
                 string nome = linha.Substring(13, 20).Trim();
-                Console.WriteLine($" {item.Produto} {nome.PadRight(20, ' ')} {item.ValorUnitario,8:###.#0}     {item.Quantidade,8:000}        {item.TotalItem,8:#,###.#0}");
+                Console.WriteLine($" {item.Produto} {nome.PadRight(20, ' ')} {item.ValorUnitario,8:##0.#0}     {item.Quantidade,8:000}        {item.TotalItem,8:#,##0.#0}");
             });
             Console.WriteLine("\n -------------------------------------------------------------------------\n");
         }

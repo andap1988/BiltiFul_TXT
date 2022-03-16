@@ -24,6 +24,7 @@ namespace BiltiFulBD
         public string ItemProducao { get; set; }
         public string IdMPrima { get; set; }
         public string IdVenda { get; set; }
+        public string IdCompra { get; set; }
 
         public Arquivos()
         {
@@ -41,6 +42,7 @@ namespace BiltiFulBD
             ItemProducao = "ItemProducao.dat";
             IdMPrima = "IdMPrima.dat";
             IdVenda = "IdVenda.dat";
+            IdCompra = "IdCompra.dat";
             Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory() + "\\Database\\"));
             DataBase = Path.Combine(Directory.GetCurrentDirectory() + "\\Database\\");
         }
@@ -77,6 +79,8 @@ namespace BiltiFulBD
                     File.Create(DataBase + IdMPrima).Close();
                 if (!File.Exists(DataBase + IdVenda))
                     File.Create(DataBase + IdVenda).Close();
+                if (!File.Exists(DataBase + IdCompra))
+                    File.Create(DataBase + IdCompra).Close();
             }
             catch (Exception ex)
             {
