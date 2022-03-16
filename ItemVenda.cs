@@ -345,6 +345,8 @@ namespace BiltiFulBD
 
                                         MontarCupom(itens);
 
+                                        totalVenda = 0;
+
                                         itens.ForEach(item =>
                                         {
                                             totalVenda = totalVenda + item.TotalItem;
