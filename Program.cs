@@ -136,7 +136,8 @@ namespace BiltiFulBD
                         option = Menus("Biltiful", new string[] { "Cadastros", "Producao", "Compras", "Vendas" });
                         break;
                     case 2:
-                        
+                        Producao producao = new();
+                        producao.Menu();
                         option = Menus("Biltiful", new string[] { "Cadastros", "Producao", "Compras", "Vendas" });
                         break;
                     case 3:
