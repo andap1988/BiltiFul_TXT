@@ -54,6 +54,11 @@ namespace BiltiFulBD
                 arquivo = Arquivos.Compra;
                 nomeExibicao = "Compras";
             }
+            else if (setor == "Producao")
+            {
+                arquivo = Arquivos.Producao;
+                nomeExibicao = "Producoes";
+            }
 
             List<string> linhas = Arquivos.MontarLista(arquivo);
 
@@ -301,6 +306,33 @@ namespace BiltiFulBD
                     Console.WriteLine($" {linha.Substring(0, 6)}     {nome.PadRight(20, ' ')}     {item.Substring(24, 5).Insert(3, ","),8:##0.#0}      {item.Substring(19, 5).Insert(3, ","),8:##0.#0}       {item.Substring(29, 6).Insert(1, ".").Insert(5, ","),8:#,##0.#0}");
                 });
                 Console.WriteLine("\n\n                               --/-------/--\n");
+            }
+            else if (setor == "Producao")
+            {
+                List<string> itensProducao = null;
+
+                string codProducao = dado.Substring(0, 5);
+                string dataProducao = dado.Substring(5, 8).Insert(2, "/").Insert(5, "/");
+                string codProduto = dado.Substring(13, 13);
+                string qtProduto = dado.Substring(26, 5).Insert(3, ",");
+
+                Console.WriteLine($"\n Producao nº:    {codProducao}");
+                Console.WriteLine($" Data Producao:    {dataProducao}");
+                Console.WriteLine($" Cod. Produto:     {codProduto}");
+                Console.WriteLine($" Qtd. de Produto:  {qtProduto:###.#0}");
+
+                itensProducao = Arquivos.MontarLista(Arquivos.ItemProducao, dado.Substring(0, 5), 0, 5, true);
+
+                Console.WriteLine("\n Cod.       Materia-prima            Qt.  ");
+                Console.WriteLine(" -------------------------------------------\n");
+                itensProducao.ForEach(item =>
+                {
+                    string linha = Arquivos.RecuperaLinhaInteira(Arquivos.MateriaPrima, item.Substring(13, 6), 0, 6);
+                    string nome = linha.Substring(6, 20).Trim();
+                    Console.WriteLine($" {linha.Substring(0, 6)}     {nome.PadRight(20, ' ')} {item.Substring(19, 5).Insert(3, ","),8:##0.#0}");
+                });
+                Console.WriteLine("\n\n             --/-------/--\n");
+
             }
         }
     }

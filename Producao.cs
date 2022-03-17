@@ -80,8 +80,9 @@ namespace BiltiFulBD
 
         public void Cadastrar()
         {
-            string msgInicial, msgSaida, escolha, produtoEscolhido;
+            string msgInicial, msgSaida, escolha, produtoEscolhido = null;
             bool flagInterna = true, flagPrincipal = true;
+            List<string> itensArquivo = new();
 
             msgInicial = "\n ...:: Cadastrar Producao ::...\n";
             msgSaida = " Caso queira voltar ao menu anterior, basta digitar 9 e pressionar ENTER\n";
@@ -109,7 +110,7 @@ namespace BiltiFulBD
                         Console.WriteLine(" -------------------------------------------------------------------------\n");
 
                         Console.WriteLine(" Desejas: \n");
-                        Console.WriteLine(" 1 - Digitar o codigo do produto para iniciar a producao.");
+                        Console.WriteLine(" 1 - Digitar o codigo ou nome do produto para iniciar a producao.");
                         Console.WriteLine(" 2 - Listar todos os produtos disponiveis para producao.");
                         Console.Write("\n Escolha: ");
                         escolha = Console.ReadLine();
@@ -128,10 +129,72 @@ namespace BiltiFulBD
                             Console.WriteLine(msgInicial);
                             Console.WriteLine(msgSaida);
                             Console.WriteLine(" -------------------------------------------------------------------------\n");
-                            Console.Write(" Digite o codigo do produto: ");
+
+                            Console.WriteLine(" Porcurar por: 1 - Nome / 2 - Codigo.");
+                            Console.Write("\n Escolha: ");
                             escolha = Console.ReadLine();
-                            produtoEscolhido = Arquivos.RecuperaLinhaInteira(Arquivos.Produto, escolha, 0, 13);
-                            flagInterna = false;
+
+                            if (escolha != "1" && escolha != "2" && escolha != "9")
+                            {
+                                Console.WriteLine("\n xxxx Digite apenas '1' ou '2'.");
+                                Console.WriteLine("\n Pressione ENTER para digitar novamente...");
+                                Console.ReadKey();
+                            }
+                            else if (escolha == "9")
+                                return;
+                            else if (escolha == "1")
+                            {
+                                Console.Write("\n Digite o nome do produto: ");
+                                escolha = Console.ReadLine();
+
+                                if (string.IsNullOrEmpty(escolha))
+                                {
+                                    Console.WriteLine("\n xxxx O nome nao pode ser vazio.");
+                                    Console.WriteLine("\n Pressione ENTER para voltar...");
+                                    Console.ReadKey();
+                                }
+                                else
+                                {
+                                    escolha = escolha.PadLeft(20, ' ');
+                                    produtoEscolhido = Arquivos.RecuperaLinhaInteira(Arquivos.Produto, escolha, 13, 20);
+
+                                    if (string.IsNullOrEmpty(produtoEscolhido))
+                                    {
+                                        Console.WriteLine("\n xxxx Produto nao escontrado");
+                                        Console.WriteLine("\n Pressione ENTER para voltar...");
+                                        Console.ReadKey();
+                                    }
+                                    else if (char.Parse(produtoEscolhido.Substring(54, 1)) == 'I')
+                                    {
+                                        Console.WriteLine("\n xxxx Produto esta indisponivel para producao (inativo)");
+                                        Console.WriteLine("\n Pressione ENTER para digitar novamente...");
+                                        Console.ReadKey();
+                                    }
+                                    else
+                                        flagInterna = false;
+                                }
+                            }
+                            else if (escolha == "2")
+                            {
+                                Console.Write("\n Digite o codigo do produto: ");
+                                escolha = Console.ReadLine();
+                                produtoEscolhido = Arquivos.RecuperaLinhaInteira(Arquivos.Produto, escolha, 0, 13);
+
+                                if (string.IsNullOrEmpty(produtoEscolhido))
+                                {
+                                    Console.WriteLine("\n xxxx Produto nao escontrado");
+                                    Console.WriteLine("\n Pressione ENTER para digitar novamente...");
+                                    Console.ReadKey();
+                                }
+                                else if (char.Parse(produtoEscolhido.Substring(54, 1)) == 'I')
+                                {
+                                    Console.WriteLine("\n xxxx Produto esta indisponivel para producao (inativo)");
+                                    Console.WriteLine("\n Pressione ENTER para digitar novamente...");
+                                    Console.ReadKey();
+                                }
+                                else
+                                    flagInterna = false;
+                            }
                         }
                         else if (escolha == "2")
                         {
@@ -141,26 +204,141 @@ namespace BiltiFulBD
                             Console.WriteLine(" -------------------------------------------------------------------------\n");
                             Console.WriteLine("                        ..:: Produtos ::..");
 
-                            itensArquivo = Arquivos.MontarLista(Arquivos.Produto);
+                            itensArquivo = Arquivos.MontarLista(Arquivos.Produto, "I", 54, 1);
 
                             itensArquivo.ForEach(item =>
                             {
-                                MontarCompra(item);
+                                MontarProduto(item);
                             });
 
-                            Console.Write(" Digite o codigo da compra para exclusao: ");
-                            escolha = Console.ReadLine().PadLeft(5, '0');
-                            compraEscolhida = Arquivos.RecuperaLinhaInteira(Arquivos.Compra, escolha, 0, 5);
-                            flagInterna = false;
+                            Console.WriteLine(" -------------------------------------------------------------------------\n");
+
+                            Console.WriteLine(" Porcurar por: 1 - Nome / 2 - Codigo.");
+                            Console.Write("\n Escolha: ");
+                            escolha = Console.ReadLine();
+
+                            if (escolha != "1" && escolha != "2" && escolha != "9")
+                            {
+                                Console.WriteLine("\n xxxx Digite apenas '1' ou '2'.");
+                                Console.WriteLine("\n Pressione ENTER para digitar novamente...");
+                                Console.ReadKey();
+                            }
+                            else if (escolha == "9")
+                                return;
+                            else if (escolha == "1")
+                            {
+                                Console.Write("\n Digite o nome do produto: ");
+                                escolha = Console.ReadLine();
+
+                                if (string.IsNullOrEmpty(escolha))
+                                {
+                                    Console.WriteLine("\n xxxx O nome nao pode ser vazio.");
+                                    Console.WriteLine("\n Pressione ENTER para voltar...");
+                                    Console.ReadKey();
+                                }
+                                else
+                                {
+                                    escolha = escolha.PadLeft(20, ' ');
+                                    produtoEscolhido = Arquivos.RecuperaLinhaInteira(Arquivos.Produto, escolha, 13, 20);
+
+                                    if (string.IsNullOrEmpty(produtoEscolhido))
+                                    {
+                                        Console.WriteLine("\n xxxx Produto nao escontrado");
+                                        Console.WriteLine("\n Pressione ENTER para voltar...");
+                                        Console.ReadKey();
+                                    }
+                                    else if (char.Parse(produtoEscolhido.Substring(54, 1)) == 'I')
+                                    {
+                                        Console.WriteLine("\n xxxx Produto esta indisponivel para producao (inativo)");
+                                        Console.WriteLine("\n Pressione ENTER para digitar novamente...");
+                                        Console.ReadKey();
+                                    }
+                                    else
+                                        flagInterna = false;
+                                }
+                            }
+                            else if (escolha == "2")
+                            {
+                                Console.Write("\n Digite o codigo do produto: ");
+                                escolha = Console.ReadLine().PadLeft(5, '0');
+                                produtoEscolhido = Arquivos.RecuperaLinhaInteira(Arquivos.Produto, escolha, 0, 13);
+
+                                if (string.IsNullOrEmpty(produtoEscolhido))
+                                {
+                                    Console.WriteLine("\n xxxx Produto nao escontrado");
+                                    Console.WriteLine("\n Pressione ENTER para digitar novamente...");
+                                    Console.ReadKey();
+                                }
+                                else if (char.Parse(produtoEscolhido.Substring(54, 1)) == 'I')
+                                {
+                                    Console.WriteLine("\n xxxx Produto esta indisponivel para producao (inativo)");
+                                    Console.WriteLine("\n Pressione ENTER para digitar novamente...");
+                                    Console.ReadKey();
+                                }
+                                else
+                                    flagInterna = false;
+                            }
                         }
                     } while (flagInterna);
 
-                    ItemVenda novaVenda = new();
-                    novaVenda.IniciarVenda(cpf, nome, dataNasc);
-                    flagPrincipal = false;
+                    flagInterna = true;
 
+                    do
+                    {
+                        Console.Clear();
+                        Console.WriteLine(msgInicial);
+                        Console.WriteLine(msgSaida);
+                        Console.WriteLine(" -------------------------------------------------------------------------\n");
+                        Console.WriteLine($" Codigo nº:      {produtoEscolhido.Substring(0, 13)}");
+                        Console.WriteLine($" Nome:           {produtoEscolhido.Substring(13, 20).Trim()}");
+                        Console.WriteLine($" Ultima Venda:   {produtoEscolhido.Substring(38, 8).Insert(2, "/").Insert(5, "/")}");
+                        Console.WriteLine($" Valor da Venda: {produtoEscolhido.Substring(33, 5).Insert(3, ",")}");
+
+                        Console.WriteLine("\n Confirma produto escolhido? 1 - SIM / 2 - NAO: ");
+                        Console.Write("\n Escolha: ");
+                        escolha = Console.ReadLine();
+
+                        if (escolha != "1" && escolha != "2" && escolha != "9")
+                        {
+                            Console.WriteLine("\n xxxx Digite apenas '1' ou '2'.");
+                            Console.WriteLine("\n Pressione ENTER para digitar novamente...");
+                            Console.ReadKey();
+                        }
+                        else if (escolha == "9")
+                            return;
+                        else if (escolha == "1")
+                        {
+                            ItemProducao novaProducao = new();
+                            novaProducao.IniciarProducao(produtoEscolhido);
+                            Console.WriteLine(" Acabou producao");
+                            Console.ReadKey();
+                            flagInterna = false;
+                            flagPrincipal = false;
+                        }
+                        else if (escolha == "2")
+                        {
+                            Console.WriteLine("\n xxxx Producao cancelada.");
+                            Console.WriteLine("\n Pressione ENTER para voltar...");
+                            Console.ReadKey();
+                            flagInterna = false;
+                            flagPrincipal = false;
+                        }
+                    } while (flagInterna);
                 } while (flagPrincipal);
             }
+        }
+
+        public void MontarProduto(string item)
+        {
+            string codProduto = item.Substring(0, 13);
+            string nomeProd = item.Substring(13, 20).Trim();
+            string ultimaVenda = item.Substring(38, 8).Insert(2, "/").Insert(5, "/");
+            string valorVenda = item.Substring(33, 5);
+
+            Console.WriteLine($"\n Codigo nº:      {codProduto}");
+            Console.WriteLine($" Nome:           {nomeProd}");
+            Console.WriteLine($" Ultima Venda:   {ultimaVenda}");
+            Console.WriteLine($" Valor da Venda: {valorVenda.Insert(3, ","):###.#0}");
         }
 
         public void Excluir()
@@ -170,7 +348,17 @@ namespace BiltiFulBD
 
         public void Imprimir()
         {
-
+            if (!Arquivos.VerificarArquivoVazio(Arquivos.Producao))
+            {
+                Console.WriteLine("\n xxxx Nao ha nenhuma producao realizada.");
+                Console.WriteLine("\n Pressione ENTER para voltar...\n");
+                Console.ReadKey();
+            }
+            else
+            {
+                FuncoesGerais fn = new();
+                fn.Imprimir("Producao");
+            }
         }
     }
 }
