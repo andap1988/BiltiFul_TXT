@@ -38,7 +38,7 @@ namespace BiltiFulBD
             string msgInicial, msgSaida, valorVenda, ultimaVenda, codProd, nomeProd, qtProd, idLinha, escolha, nomeBusca, mprimaEncontrada = null, nomeMPrima, codMPrima, qtMPrima, codBusca;
             int idProducao;
             decimal qtMP = 0, qtPROD = 0;
-            bool flagInterna = true, flagPrincipal = true;
+            bool flag = true, flagInterna = true, flagPrincipal = true;
             List<string> mprimas = new();
             List<ItemProducao> listaItemProducao = new();
             ItemProducao itemProducao = null;
@@ -248,7 +248,74 @@ namespace BiltiFulBD
                         }
                         else
                         {
-                            Console.Write(" Qtd. produto a ser produzido (entre 1 e 999,99): ");
+                            Console.Clear();
+                            Console.WriteLine(msgInicial);
+                            Console.WriteLine(msgSaida);
+                            Console.WriteLine(" -------------------------------------------------------------------------\n");
+
+                            Console.WriteLine($" Codigo nº:      {codProd}");
+                            Console.WriteLine($" Nome:           {nomeProd}");
+                            Console.WriteLine($" Ultima Venda:   {ultimaVenda}");
+                            Console.WriteLine($" Valor da Venda: {valorVenda}");
+                            Console.WriteLine(" -----------------------------\n");
+
+                            Console.WriteLine($" Producao nº {idProducao:00000}");
+                            Console.WriteLine($" Data de Producao: {DateTime.Now.Date:dd/MM/yyyy}");
+                            Console.WriteLine(" -----------------------------\n");
+
+                            itemProducao = new(idProducao, DateTime.Now.Date, codMPrima, qtMP);
+                            listaItemProducao.Add(itemProducao);
+
+                            MontarLista(listaItemProducao);
+                            flagInterna = false;
+                        }
+                    }
+                } while (flagInterna);
+
+                flagInterna = true;
+
+                do
+                {
+                    Console.WriteLine(" Desejas: \n");
+                    Console.WriteLine(" 1 - Adicionar mais materia-prima");
+                    Console.WriteLine(" 2 - Finalizar adicao de materia-prima");
+                    Console.Write("\n Escolha: ");
+                    escolha = Console.ReadLine();
+
+                    if (escolha == "9")
+                        return;
+                    else if (escolha != "1" && escolha != "2" && escolha != "9")
+                    {
+                        Console.WriteLine("\n xxxx Digite apenas '1' ou '2'.");
+                        Console.WriteLine("\n Pressione ENTER para digitar novamente...");
+                        Console.ReadKey();
+                    }
+                    else if (escolha == "1")
+                    {
+                        flagInterna = false;
+                    }
+                    else if (escolha == "2")
+                    {
+                        Console.Clear();
+                        Console.WriteLine(msgInicial);
+                        Console.WriteLine(msgSaida);
+                        Console.WriteLine(" -------------------------------------------------------------------------\n");
+
+                        Console.WriteLine($" Codigo nº:      {codProd}");
+                        Console.WriteLine($" Nome:           {nomeProd}");
+                        Console.WriteLine($" Ultima Venda:   {ultimaVenda}");
+                        Console.WriteLine($" Valor da Venda: {valorVenda}");
+                        Console.WriteLine(" -----------------------------\n");
+
+                        Console.WriteLine($" Producao nº {idProducao:00000}");
+                        Console.WriteLine($" Data de Producao: {DateTime.Now.Date:dd/MM/yyyy}");
+                        Console.WriteLine(" -----------------------------\n");
+
+                        MontarLista(listaItemProducao);
+
+                        do
+                        {
+                            Console.Write(" Qtd. de produto a ser produzido (entre 1 e 999,99): ");
                             qtProd = Console.ReadLine();
 
                             if (string.IsNullOrEmpty(qtProd))
@@ -298,84 +365,35 @@ namespace BiltiFulBD
 
                                     Console.WriteLine($" Quantidade de produtos: {qtPROD:###.#0}");
 
-                                    itemProducao = new(idProducao, DateTime.Now.Date, codMPrima, qtMP);
-                                    listaItemProducao.Add(itemProducao);
-
                                     MontarLista(listaItemProducao);
-                                    flagInterna = false;
+
+                                    Console.WriteLine("\n Finalizar producao? 1 - SIM / 2 - NAO (ao escolher NAO, a producao sera cancelada)");
+                                    Console.Write("\n Escolha: ");
+                                    escolha = Console.ReadLine();
+
+                                    if (escolha != "1" && escolha != "2")
+                                    {
+                                        Console.WriteLine("\n xxxx Digite apenas '1' para SIM ou '2' para NAO.");
+                                        Console.WriteLine("\n Pressione ENTER para digitar novamente...");
+                                        Console.ReadKey();
+                                    }
+                                    else if (escolha == "2")
+                                    {
+                                        Console.WriteLine("\n xxxx Producao cancelada.");
+                                        Console.WriteLine("\n Pressione ENTER para voltar...");
+                                        Console.ReadKey();
+                                        return;
+                                    }
+                                    else if (escolha == "1")
+                                    {
+                                        escolha = "100";
+                                        flag = false;
+                                        flagInterna = false;
+                                        flagPrincipal = false;
+                                    }
                                 }
                             }
-                        }
-                    }
-                } while (flagInterna);
-
-                flagInterna = true;
-
-                do
-                {
-                    Console.WriteLine(" Desejas: \n");
-                    Console.WriteLine(" 1 - Adicionar mais materia prima");
-                    Console.WriteLine(" 2 - Finalizar producao");
-                    Console.Write("\n Escolha: ");
-                    escolha = Console.ReadLine();
-
-                    if (escolha == "9")
-                        return;
-                    else if (escolha != "1" && escolha != "2" && escolha != "9")
-                    {
-                        Console.WriteLine("\n xxxx Digite apenas '1' ou '2'.");
-                        Console.WriteLine("\n Pressione ENTER para digitar novamente...");
-                        Console.ReadKey();
-                    }
-                    else if (escolha == "1")
-                    {
-
-
-                    }
-                    else if (escolha == "2")
-                    {
-                        Console.Clear();
-                        Console.WriteLine(msgInicial);
-                        Console.WriteLine(msgSaida);
-                        Console.WriteLine(" -------------------------------------------------------------------------\n");
-
-                        Console.WriteLine($" Codigo nº:      {codProd}");
-                        Console.WriteLine($" Nome:           {nomeProd}");
-                        Console.WriteLine($" Ultima Venda:   {ultimaVenda}");
-                        Console.WriteLine($" Valor da Venda: {valorVenda}");
-                        Console.WriteLine(" -----------------------------\n");
-
-                        Console.WriteLine($" Producao nº {idProducao:00000}");
-                        Console.WriteLine($" Data de Producao: {DateTime.Now.Date:dd/MM/yyyy}");
-                        Console.WriteLine(" -----------------------------\n");
-
-                        Console.WriteLine($" Quantidade de produtos: {qtPROD:###.#0}");
-
-                        MontarLista(listaItemProducao);
-
-                        Console.WriteLine("\n Finalizar producao? 1 - SIM / 2 - NAO (ao escolher NAO, a producao sera cancelada)");
-                        Console.Write("\n Escolha: ");
-                        escolha = Console.ReadLine();
-
-                        if (escolha != "1" && escolha != "2")
-                        {
-                            Console.WriteLine("\n xxxx Digite apenas '1' para SIM ou '2' para NAO.");
-                            Console.WriteLine("\n Pressione ENTER para digitar novamente...");
-                            Console.ReadKey();
-                        }
-                        else if (escolha == "2")
-                        {
-                            Console.WriteLine("\n xxxx Producao cancelada.");
-                            Console.WriteLine("\n Pressione ENTER para voltar...");
-                            Console.ReadKey();
-                            return;
-                        }
-                        else if (escolha == "1")
-                        {
-                            escolha = "100";
-                            flagInterna = false;
-                            flagPrincipal = false;
-                        }
+                        } while (flag);
                     }
                 } while (flagInterna);
             } while (flagPrincipal);

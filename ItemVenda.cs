@@ -391,6 +391,9 @@ namespace BiltiFulBD
                 {
                     cpf = cpf.Replace(".", "").Replace("-", "");
                     Venda vendaFeita = new(idVenda, DateTime.Now.Date, decimal.Parse(cpf), totalVenda);
+
+                    AlterarDataUltimaCompra(DateTime.Now.Date.ToString("dd/MM/yyyy").Replace("/", ""), cpf);
+
                     Produto tempProduto = new();
 
                     Arquivos.DeletarArquivo(Arquivos.IdVenda);
@@ -423,6 +426,21 @@ namespace BiltiFulBD
                 Console.WriteLine($" {item.Produto} {nome.PadRight(20, ' ')} {item.ValorUnitario,8:##0.#0}     {item.Quantidade,8:000}        {item.TotalItem,8:#,##0.#0}");
             });
             Console.WriteLine("\n -------------------------------------------------------------------------\n");
+        }
+
+        public void AlterarDataUltimaCompra(string dataUltimaCompra, string cpf)
+        {
+            string linhaCliente = Arquivos.RecuperaLinhaInteira(Arquivos.Cliente, cpf, 0, 11);
+            string novoCliente = linhaCliente.Substring(0, 11)
+                               + linhaCliente.Substring(11, 50)
+                               + linhaCliente.Substring(61, 8)
+                               + linhaCliente.Substring(69, 1)
+                               + dataUltimaCompra
+                               + linhaCliente.Substring(78, 8)
+                               + linhaCliente.Substring(86, 1);
+
+            Arquivos.AlterarDocumento(Arquivos.Cliente, dataUltimaCompra, cpf, 0, 11, true);
+            Arquivos.AlterarDocumento(Arquivos.Cliente, novoCliente, cpf, 0, 11);
         }
     }
 }

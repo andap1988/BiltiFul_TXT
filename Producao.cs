@@ -44,7 +44,7 @@ namespace BiltiFulBD
                 Console.WriteLine("\n .....:::: Menu Producao ::::.....\n");
                 Console.WriteLine(" 1 - Cadastrar Producao");
                 Console.WriteLine(" 2 - Excluir Producao");
-                Console.WriteLine(" 3 - Mostrar Producões");
+                Console.WriteLine(" 3 - Mostrar Producoes");
                 Console.WriteLine(" ---------------------------");
                 Console.WriteLine($" 9 - Sair\n");
                 Console.Write("\n Escolha: ");
@@ -310,8 +310,6 @@ namespace BiltiFulBD
                         {
                             ItemProducao novaProducao = new();
                             novaProducao.IniciarProducao(produtoEscolhido);
-                            Console.WriteLine(" Acabou producao");
-                            Console.ReadKey();
                             flagInterna = false;
                             flagPrincipal = false;
                         }
@@ -343,7 +341,159 @@ namespace BiltiFulBD
 
         public void Excluir()
         {
+            string msgInicial, msgSaida, escolha, producaoEscolhida = null;
+            bool flagPrincipal = true, flagInterna = true;
+            List<string> itensArquivo = null;
 
+
+            msgInicial = "\n ...:: Excluir Producao ::...\n";
+            msgSaida = " Caso queira voltar ao menu anterior, basta digitar 9 e pressionar ENTER\n";
+
+            if (!Arquivos.VerificarArquivoVazio(Arquivos.Producao))
+            {
+                Console.WriteLine("\n xxxx Nao ha nenhuma producao cadastrada.");
+                Console.WriteLine("\n Pressione ENTER para voltar...\n");
+                Console.ReadKey();
+            }
+            else
+            {
+                do
+                {
+                    flagInterna = true;
+                    do
+                    {
+                        escolha = null;
+                        Console.Clear();
+                        Console.WriteLine(msgInicial);
+                        Console.WriteLine(msgSaida);
+                        Console.WriteLine(" -------------------------------------------------------------------------\n");
+
+                        Console.WriteLine(" Desejas: \n");
+                        Console.WriteLine(" 1 - Digitar o codigo da producao pra exclusao.");
+                        Console.WriteLine(" 2 - Listar todas as producoes disponiveis para exclusao.");
+                        Console.Write("\n Escolha: ");
+                        escolha = Console.ReadLine();
+
+                        if (escolha != "1" && escolha != "2" && escolha != "9")
+                        {
+                            Console.WriteLine("\n xxxx Digite apenas '1' ou '2'.");
+                            Console.WriteLine("\n Pressione ENTER para digitar novamente...");
+                            Console.ReadKey();
+                        }
+                        else if (escolha == "9")
+                            return;
+                        else if (escolha == "1")
+                        {
+                            Console.Clear();
+                            Console.WriteLine(msgInicial);
+                            Console.WriteLine(msgSaida);
+                            Console.WriteLine(" -------------------------------------------------------------------------\n");
+                            Console.Write(" Digite o codigo da producao para exclusao: ");
+                            escolha = Console.ReadLine().PadLeft(5, '0');
+                            producaoEscolhida = Arquivos.RecuperaLinhaInteira(Arquivos.Producao, escolha, 0, 5);
+                            flagInterna = false;
+                        }
+                        else if (escolha == "2")
+                        {
+                            Console.Clear();
+                            Console.WriteLine(msgInicial);
+                            Console.WriteLine(msgSaida);
+                            Console.WriteLine(" -------------------------------------------------------------------------\n");
+                            Console.WriteLine("                        ..:: Producoes realizadas ::..");
+
+                            itensArquivo = Arquivos.MontarLista(Arquivos.Producao);
+
+                            itensArquivo.ForEach(item =>
+                            {
+                                MontarProducao(item);
+                            });
+
+                            Console.Write(" Digite o codigo da producao para exclusao: ");
+                            escolha = Console.ReadLine().PadLeft(5, '0');
+                            producaoEscolhida = Arquivos.RecuperaLinhaInteira(Arquivos.Producao, escolha, 0, 5);
+                            flagInterna = false;
+                        }
+                    } while (flagInterna);
+
+                    flagInterna = true;
+
+                    if (string.IsNullOrEmpty(producaoEscolhida))
+                    {
+                        Console.WriteLine("\n xxxx Codigo invalido.");
+                        Console.WriteLine("\n Pressione ENTER para digitar novamente...");
+                        Console.ReadKey();
+                    }
+                    else
+                    {
+                        do
+                        {
+                            Console.Clear();
+                            Console.WriteLine(msgInicial);
+                            Console.WriteLine(msgSaida);
+                            Console.WriteLine(" -------------------------------------------------------------------------\n");
+
+                            MontarProducao(producaoEscolhida);
+
+                            Console.WriteLine(" Deseja excluir essa producao? 1 - SIM / 2 - NAO.");
+                            Console.Write("\n Escolha: ");
+                            escolha = Console.ReadLine();
+
+                            if (escolha != "1" && escolha != "2")
+                            {
+                                Console.WriteLine("\n xxxx Digite apenas '1' para SIM ou '2' para NAO.");
+                                Console.WriteLine("\n Pressione ENTER para digitar novamente...");
+                                Console.ReadKey();
+                            }
+                            else if (escolha == "1")
+                            {
+                                Arquivos.AlterarDocumento(Arquivos.Producao, producaoEscolhida, producaoEscolhida.Substring(0, 5), 0, 5, true);
+                                Arquivos.AlterarDocumento(Arquivos.ItemProducao, producaoEscolhida, producaoEscolhida.Substring(0, 5), 0, 5, true);
+
+                                Console.WriteLine("\n A producao foi excluida.");
+                                Console.WriteLine("\n Pressione ENTER para voltar...");
+                                Console.ReadKey();
+                                flagInterna = false;
+                                flagPrincipal = false;
+                            }
+                            else if (escolha == "2")
+                            {
+                                Console.WriteLine("\n xxxx Exclusao cancelada.");
+                                Console.WriteLine("\n Pressione ENTER para voltar...");
+                                Console.ReadKey();
+                                return;
+                            }
+
+                        } while (flagInterna);
+                    }
+                } while (flagPrincipal);
+            }
+        }
+
+        public void MontarProducao(string item)
+        {
+            List<string> itensProducao = null;
+
+            string codProducao = item.Substring(0, 5);
+            string dataProducao = item.Substring(5, 8).Insert(2, "/").Insert(5, "/");
+            string codProduto = item.Substring(13, 13);
+            string qtProduto = item.Substring(26, 5).Insert(3, ",");
+
+            Console.WriteLine($"\n Producao nº:      {codProducao}");
+            Console.WriteLine($" Data Producao:    {dataProducao}");
+            Console.WriteLine($" Cod. Produto:     {codProduto}");
+            Console.WriteLine($" Qtd. de Produto:  {qtProduto:###.#0}");
+
+            itensProducao = Arquivos.MontarLista(Arquivos.ItemProducao, item.Substring(0, 5), 0, 5, true);
+
+            Console.WriteLine("\n Cod.       Materia-prima            Qt.  ");
+            Console.WriteLine(" -------------------------------------------\n");
+            itensProducao.ForEach(item =>
+            {
+                string linha = Arquivos.RecuperaLinhaInteira(Arquivos.MateriaPrima, item.Substring(13, 6), 0, 6);
+                string nome = linha.Substring(6, 20).Trim();
+                Console.WriteLine($" {linha.Substring(0, 6)}     {nome.PadRight(20, ' ')} {item.Substring(19, 5).Insert(3, ","),8:##0.#0}");
+            });
+            Console.WriteLine("\n\n             --/-------/--\n");
         }
 
         public void Imprimir()

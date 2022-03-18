@@ -29,7 +29,7 @@ namespace BiltiFulBD
                 {
                     flag = false;
                 }
-                else if ((option < 1) || (option > 4))
+                else if ((option < 1) || (option > 5))
                 {
                     Console.WriteLine("\n Opcao invalida.\n");
                     Console.WriteLine(" Pressione ENTER para voltar...");
@@ -133,22 +133,27 @@ namespace BiltiFulBD
                                     break;
                             }
                         } while (subFlag);
-                        option = Menus("Biltiful", new string[] { "Cadastros", "Producao", "Compras", "Vendas" });
+                        option = Menus("Menu Biltiful", new string[] { "Cadastros", "Producao", "Compras", "Vendas", "Pesquisas" });
                         break;
                     case 2:
                         Producao producao = new();
                         producao.Menu();
-                        option = Menus("Biltiful", new string[] { "Cadastros", "Producao", "Compras", "Vendas" });
+                        option = Menus("Menu Biltiful", new string[] { "Cadastros", "Producao", "Compras", "Vendas", "Pesquisas" });
                         break;
                     case 3:
                         Compra compra = new();
                         compra.Menu();
-                        option = Menus("Biltiful", new string[] { "Cadastros", "Producao", "Compras", "Vendas" });
+                        option = Menus("Menu Biltiful", new string[] { "Cadastros", "Producao", "Compras", "Vendas", "Pesquisas" });
                         break;
                     case 4:
                         Venda venda = new();
                         venda.Menu();
-                        option = Menus("Biltiful", new string[] { "Cadastros", "Producao", "Compras", "Vendas" });
+                        option = Menus("Menu Biltiful", new string[] { "Cadastros", "Producao", "Compras", "Vendas", "Pesquisas" });
+                        break;
+                    case 5:
+                        Pesquisa pesquisa = new();
+                        pesquisa.Menu();
+                        option = Menus("Menu Biltiful", new string[] { "Cadastros", "Producao", "Compras", "Vendas", "Pesquisas" });
                         break;
                     case 9:
                         flag = false;

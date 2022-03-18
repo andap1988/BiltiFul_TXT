@@ -316,7 +316,7 @@ namespace BiltiFulBD
                 string codProduto = dado.Substring(13, 13);
                 string qtProduto = dado.Substring(26, 5).Insert(3, ",");
 
-                Console.WriteLine($"\n Producao nº:    {codProducao}");
+                Console.WriteLine($"\n Producao nº:      {codProducao}");
                 Console.WriteLine($" Data Producao:    {dataProducao}");
                 Console.WriteLine($" Cod. Produto:     {codProduto}");
                 Console.WriteLine($" Qtd. de Produto:  {qtProduto:###.#0}");
