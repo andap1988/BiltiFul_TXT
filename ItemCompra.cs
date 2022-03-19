@@ -443,6 +443,8 @@ namespace BiltiFulBD
                     Compra compraFeita = new(idCompra, DateTime.Now.Date, decimal.Parse(cnpj), totalCompra);
                     MPrima tempMPrima = new();
 
+                    AlterarDataUltimaCompra(DateTime.Now.Date.ToString("dd/MM/yyyy").Replace("/", ""), cnpj);
+
                     Arquivos.DeletarArquivo(Arquivos.IdCompra);
                     Arquivos.Gravar(idCompra.ToString("00000"), Arquivos.IdCompra);
                     itens.ForEach(item =>
@@ -473,6 +475,20 @@ namespace BiltiFulBD
                 Console.WriteLine($" {item.MateriaPrima}     {nome.PadRight(20, ' ')}     {item.ValorUnitario,8:##0.#0}      {item.Quantidade,8:##0.#0}       {item.TotalItem,8:#,##0.#0}");
             });
             Console.WriteLine("\n ---------------------------------------------------------------------------\n");
+        }
+
+        public void AlterarDataUltimaCompra(string dataUltimaCompra, string cnpj)
+        {
+            string linhaFornecedor = Arquivos.RecuperaLinhaInteira(Arquivos.Fornecedor, cnpj, 0, 14);
+            string novoFornecedor = linhaFornecedor.Substring(0, 14)
+                               + linhaFornecedor.Substring(14, 50)
+                               + linhaFornecedor.Substring(64, 8)
+                               + dataUltimaCompra
+                               + linhaFornecedor.Substring(80, 8)
+                               + linhaFornecedor.Substring(88, 1);
+
+            Arquivos.AlterarDocumento(Arquivos.Fornecedor, dataUltimaCompra, cnpj, 0, 14, true);
+            Arquivos.AlterarDocumento(Arquivos.Fornecedor, novoFornecedor, cnpj, 0, 14);
         }
     }
 }
