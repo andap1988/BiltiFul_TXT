@@ -39,7 +39,7 @@ namespace BiltiFulBD
                 {
                     flag = false;
                 }
-                else if ((option < 0) || (option > 7))
+                else if ((option < 0) || (option > 8))
                 {
                     Console.WriteLine("\n Opcao invalida.");
                     Console.WriteLine("\n Pressione ENTER para voltar...");
@@ -65,16 +65,16 @@ namespace BiltiFulBD
                             PesquisarProducao();
                             break;
                         case 5:
-                            PesquisarCompras();
+                            PesquisarCompra();
                             break;
                         case 6:
-                            PesquisarVendas();
+                            PesquisarVenda();
                             break;
                         case 7:
-                            PesquisarVendas();
+                            PesquisarBloqueado();
                             break;
                         case 8:
-                            PesquisarVendas();
+                            PesquisarInadimplente();
                             break;
                     }
                 }
@@ -705,7 +705,7 @@ namespace BiltiFulBD
                 } while (flagPrincipal);
             }
         }
-        public void PesquisarCompras()
+        public void PesquisarCompra()
         {
             string msgInicial, msgSaida, linhaEncontrada, codCompra;
             bool flagPrincipal = true;
@@ -778,7 +778,7 @@ namespace BiltiFulBD
                 } while (flagPrincipal);
             }
         }
-        public void PesquisarVendas()
+        public void PesquisarVenda()
         {
             string msgInicial, msgSaida, linhaEncontrada, codVenda;
             bool flagPrincipal = true;
@@ -847,6 +847,283 @@ namespace BiltiFulBD
                             Console.ReadLine();
                             flagPrincipal = false;
                         }
+                    }
+                } while (flagPrincipal);
+            }
+        }
+
+        public void PesquisarBloqueado()
+        {
+            string msgInicial, msgSaida, escolha, linhaEncontrada, razaoSocial, cnpj;
+            bool flagInterna = true, flagPrincipal = true;
+
+            msgInicial = "\n ...:: Pesquisas ::...\n";
+            msgSaida = " Caso queira voltar ao menu anterior, basta digitar 9 e pressionar ENTER\n";
+
+            if (!Arquivos.VerificarArquivoVazio(Arquivos.Bloqueado))
+            {
+                Console.WriteLine("\n xxxx Nao ha fornecedores bloqueados para pesquisar.");
+                Console.WriteLine("\n Pressione ENTER para voltar...");
+                Console.ReadKey();
+            }
+            else
+            {
+                do
+                {
+                    Console.Clear();
+                    Console.WriteLine(msgInicial);
+                    Console.WriteLine(msgSaida);
+                    Console.WriteLine(" -------------------------------------------------------------------------\n");
+                    Console.WriteLine(" ..:: Pesquisa de Fornecedor Bloqueado ::..\n");
+                    Console.WriteLine(" Pesquisar por:\n");
+                    Console.WriteLine(" 1 - Razao Social");
+                    Console.WriteLine(" 2 - CNPJ");
+                    Console.Write("\n Escolha: ");
+                    escolha = Console.ReadLine();
+
+                    if (escolha != "1" && escolha != "2" && escolha != "9")
+                    {
+                        Console.WriteLine("\n xxxx Digite apenas '1' ou '2'.");
+                        Console.WriteLine("\n Pressione ENTER para digitar novamente...");
+                        Console.ReadKey();
+                    }
+                    else if (escolha == "9")
+                        return;
+                    else if (escolha == "1")
+                    {
+                        do
+                        {
+                            Console.Clear();
+                            Console.WriteLine(msgInicial);
+                            Console.WriteLine(msgSaida);
+                            Console.WriteLine(" -------------------------------------------------------------------------\n");
+                            Console.WriteLine(" ..:: Pesquisa de Fornecedor Bloqueado ::..\n");
+                            Console.Write(" Digite a razao social: ");
+                            razaoSocial = Console.ReadLine().PadLeft(50, ' ');
+
+                            if (razaoSocial == "9")
+                                return;
+                            else
+                            {
+                                if (string.IsNullOrEmpty(
+                                    Arquivos.RecuperaLinhaInteira(Arquivos.Bloqueado, razaoSocial, 14, 50)))
+                                {
+                                    Console.WriteLine("\n xxxx A razao social nao existe no cadastro de bloqueados.");
+                                    Console.WriteLine("\n Pressione ENTER para voltar...\n");
+                                    Console.ReadKey();
+                                    return;
+                                }
+                                else
+                                {
+                                    linhaEncontrada = Arquivos.RecuperaLinhaInteira(Arquivos.Bloqueado, razaoSocial, 14, 50);
+
+                                    Console.Clear();
+                                    Console.WriteLine(msgInicial);
+                                    Console.WriteLine(msgSaida);
+                                    Console.WriteLine(" -------------------------------------------------------------------------\n");
+                                    Console.WriteLine(" ..:: Pesquisa de Fornecedor Bloqueado ::..\n");
+                                    Console.WriteLine($" CNPJ:             {linhaEncontrada.Substring(0, 14).Insert(2, ".").Insert(6, ".").Insert(10, "/").Insert(15, "-")}");
+                                    Console.WriteLine($" Razao Social:     {linhaEncontrada.Substring(14, 50).Trim()}");
+                                    Console.WriteLine($" Data de Abertura: {linhaEncontrada.Substring(64, 8).Insert(2, "/").Insert(5, "/")}");
+                                    Console.WriteLine($" Utima Compra:     {linhaEncontrada.Substring(72, 8).Insert(2, "/").Insert(5, "/")}");
+                                    Console.WriteLine($" Data de Cadastro: {linhaEncontrada.Substring(80, 8).Insert(2, "/").Insert(5, "/")}");
+                                    Console.WriteLine($" Situacao:         {(linhaEncontrada.Substring(88, 1) == "A" ? "Ativo" : "Bloqueado")}");
+
+                                    Console.WriteLine("\n Pressione ENTER para voltar...");
+                                    Console.ReadLine();
+                                    flagInterna = false;
+                                    flagPrincipal = false;
+                                }
+                            }
+                        } while (flagInterna);
+                    }
+                    else if (escolha == "2")
+                    {
+                        do
+                        {
+                            Console.Clear();
+                            Console.WriteLine(msgInicial);
+                            Console.WriteLine(msgSaida);
+                            Console.WriteLine(" -------------------------------------------------------------------------\n");
+                            Console.WriteLine(" ..:: Pesquisa de Fornecedor Bloqueado ::..\n");
+                            Console.Write(" Digite o CNPJ: ");
+                            cnpj = Console.ReadLine();
+                            cnpj = cnpj.Replace(".", "").Replace("-", "").Replace("/", "");
+
+                            if (cnpj == "9")
+                                return;
+                            else
+                            {
+                                if (string.IsNullOrEmpty(
+                                    Arquivos.RecuperaLinhaInteira(Arquivos.Bloqueado, cnpj, 0, 14)))
+                                {
+                                    Console.WriteLine("\n xxxx O CNPJ nao existe no cadastro de bloqueados.");
+                                    Console.WriteLine("\n Pressione ENTER para voltar...\n");
+                                    Console.ReadKey();
+                                    return;
+                                }
+                                else
+                                {
+                                    linhaEncontrada = Arquivos.RecuperaLinhaInteira(Arquivos.Bloqueado, cnpj, 0, 14);
+
+                                    Console.Clear();
+                                    Console.WriteLine(msgInicial);
+                                    Console.WriteLine(msgSaida);
+                                    Console.WriteLine(" -------------------------------------------------------------------------\n");
+                                    Console.WriteLine(" ..:: Pesquisa de Fornecedor Bloqueado ::..\n");
+                                    Console.WriteLine($" CNPJ:             {linhaEncontrada.Substring(0, 14).Insert(2, ".").Insert(6, ".").Insert(10, "/").Insert(15, "-")}");
+                                    Console.WriteLine($" Razao Social:     {linhaEncontrada.Substring(14, 50).Trim()}");
+                                    Console.WriteLine($" Data de Abertura: {linhaEncontrada.Substring(64, 8).Insert(2, "/").Insert(5, "/")}");
+                                    Console.WriteLine($" Utima Compra:     {linhaEncontrada.Substring(72, 8).Insert(2, "/").Insert(5, "/")}");
+                                    Console.WriteLine($" Data de Cadastro: {linhaEncontrada.Substring(80, 8).Insert(2, "/").Insert(5, "/")}");
+                                    Console.WriteLine($" Situacao:         {(linhaEncontrada.Substring(88, 1) == "A" ? "Ativo" : "Bloqueado")}");
+
+                                    Console.WriteLine("\n Pressione ENTER para voltar...");
+                                    Console.ReadLine();
+                                    flagInterna = false;
+                                    flagPrincipal = false;
+                                }
+                            }
+                        } while (flagInterna);
+                    }
+                } while (flagPrincipal);
+            }
+        }
+
+        public void PesquisarInadimplente()
+        {
+            string msgInicial, msgSaida, escolha, linhaEncontrada, nome, cpf;
+            bool flagInterna = true, flagPrincipal = true;
+
+            msgInicial = "\n ...:: Pesquisas ::...\n";
+            msgSaida = " Caso queira voltar ao menu anterior, basta digitar 9 e pressionar ENTER\n";
+
+            if (!Arquivos.VerificarArquivoVazio(Arquivos.Inadimplente))
+            {
+                Console.WriteLine("\n xxxx Nao ha clientes inadimplentes para pesquisar.");
+                Console.WriteLine("\n Pressione ENTER para voltar...");
+                Console.ReadKey();
+            }
+            else
+            {
+                do
+                {
+                    Console.Clear();
+                    Console.WriteLine(msgInicial);
+                    Console.WriteLine(msgSaida);
+                    Console.WriteLine(" -------------------------------------------------------------------------\n");
+                    Console.WriteLine(" ..:: Pesquisa de Cliente Inadimplente ::..\n");
+                    Console.WriteLine(" Pesquisar por:\n");
+                    Console.WriteLine(" 1 - Nome");
+                    Console.WriteLine(" 2 - CPF");
+                    Console.Write("\n Escolha: ");
+                    escolha = Console.ReadLine();
+
+                    if (escolha != "1" && escolha != "2" && escolha != "9")
+                    {
+                        Console.WriteLine("\n xxxx Digite apenas '1' ou '2'.");
+                        Console.WriteLine("\n Pressione ENTER para digitar novamente...");
+                        Console.ReadKey();
+                    }
+                    else if (escolha == "9")
+                        return;
+                    else if (escolha == "1")
+                    {
+                        do
+                        {
+                            Console.Clear();
+                            Console.WriteLine(msgInicial);
+                            Console.WriteLine(msgSaida);
+                            Console.WriteLine(" -------------------------------------------------------------------------\n");
+                            Console.WriteLine(" ..:: Pesquisa de Cliente Inadimplente ::..\n");
+                            Console.Write(" Digite o Nome: ");
+                            nome = Console.ReadLine().PadLeft(50, ' ');
+
+                            if (nome == "9")
+                                return;
+                            else
+                            {
+                                if (string.IsNullOrEmpty(
+                                    Arquivos.RecuperaLinhaInteira(Arquivos.Cliente, nome, 11, 50)))
+                                {
+                                    Console.WriteLine("\n xxxx O nome nao existe no cadastro de inadimplentes.");
+                                    Console.WriteLine("\n Pressione ENTER para voltar...\n");
+                                    Console.ReadKey();
+                                    return;
+                                }
+                                else
+                                {
+                                    linhaEncontrada = Arquivos.RecuperaLinhaInteira(Arquivos.Inadimplente, nome, 11, 50);
+
+                                    Console.Clear();
+                                    Console.WriteLine(msgInicial);
+                                    Console.WriteLine(msgSaida);
+                                    Console.WriteLine(" -------------------------------------------------------------------------\n");
+                                    Console.WriteLine(" ..:: Pesquisa de Cliente Inadimplente ::..\n");
+                                    Console.WriteLine($" CPF:              {linhaEncontrada.Substring(0, 11).Insert(3, ".").Insert(7, ".").Insert(11, "-")}");
+                                    Console.WriteLine($" Nome:             {linhaEncontrada.Substring(11, 50).Trim()}");
+                                    Console.WriteLine($" Data de Nasc:     {linhaEncontrada.Substring(61, 8).Insert(2, "/").Insert(5, "/")}");
+                                    Console.WriteLine($" Sexo:             {(linhaEncontrada.Substring(69, 1) == "M" ? "Masculino" : "Feminino")}");
+                                    Console.WriteLine($" Utima Compra:     {linhaEncontrada.Substring(70, 8).Insert(2, "/").Insert(5, "/")}");
+                                    Console.WriteLine($" Data de Cadastro: {linhaEncontrada.Substring(78, 8).Insert(2, "/").Insert(5, "/")}");
+                                    Console.WriteLine($" Situacao:         {(linhaEncontrada.Substring(86, 1) == "A" ? "Ativo" : "Inadimplente")}");
+
+                                    Console.WriteLine("\n Pressione ENTER para voltar...");
+                                    Console.ReadLine();
+                                    flagInterna = false;
+                                    flagPrincipal = false;
+                                }
+                            }
+                        } while (flagInterna);
+                    }
+                    else if (escolha == "2")
+                    {
+                        do
+                        {
+                            Console.Clear();
+                            Console.WriteLine(msgInicial);
+                            Console.WriteLine(msgSaida);
+                            Console.WriteLine(" -------------------------------------------------------------------------\n");
+                            Console.WriteLine(" ..:: Pesquisa de Cliente Inadimplente ::..\n");
+                            Console.Write(" Digite o CPF: ");
+                            cpf = Console.ReadLine();
+
+                            if (cpf == "9")
+                                return;
+                            else
+                            {
+                                if (string.IsNullOrEmpty(
+                                    Arquivos.RecuperaLinhaInteira(Arquivos.Inadimplente, cpf.Replace(".", "").Replace("-", ""), 0, 11)))
+                                {
+                                    Console.WriteLine("\n xxxx O CPF nao existe no cadastro de inadimplentes.");
+                                    Console.WriteLine("\n Pressione ENTER para voltar...\n");
+                                    Console.ReadKey();
+                                    return;
+                                }
+                                else
+                                {
+                                    linhaEncontrada = Arquivos.RecuperaLinhaInteira(Arquivos.Inadimplente, cpf.Replace(".", "").Replace("-", ""), 0, 11);
+
+                                    Console.Clear();
+                                    Console.WriteLine(msgInicial);
+                                    Console.WriteLine(msgSaida);
+                                    Console.WriteLine(" -------------------------------------------------------------------------\n");
+                                    Console.WriteLine(" ..:: Pesquisa de Cliente Inadimplente ::..\n");
+                                    Console.WriteLine($" CPF:              {linhaEncontrada.Substring(0, 11).Insert(3, ".").Insert(7, ".").Insert(11, "-")}");
+                                    Console.WriteLine($" Nome:             {linhaEncontrada.Substring(11, 50).Trim()}");
+                                    Console.WriteLine($" Data de Nasc:     {linhaEncontrada.Substring(61, 8).Insert(2, "/").Insert(5, "/")}");
+                                    Console.WriteLine($" Sexo:             {(linhaEncontrada.Substring(69, 1) == "M" ? "Masculino" : "Feminino")}");
+                                    Console.WriteLine($" Utima Compra:     {linhaEncontrada.Substring(70, 8).Insert(2, "/").Insert(5, "/")}");
+                                    Console.WriteLine($" Data de Cadastro: {linhaEncontrada.Substring(78, 8).Insert(2, "/").Insert(5, "/")}");
+                                    Console.WriteLine($" Situacao:         {(linhaEncontrada.Substring(86, 1) == "A" ? "Ativo" : "Inadimplente")}");
+
+                                    Console.WriteLine("\n Pressione ENTER para voltar...");
+                                    Console.ReadLine();
+                                    flagInterna = false;
+                                    flagPrincipal = false;
+                                }
+                            }
+                        } while (flagInterna);
                     }
                 } while (flagPrincipal);
             }

@@ -127,13 +127,14 @@ namespace BiltiFulBD
                 using (StreamReader sr = new StreamReader(DataBase + setor))
                 {
                     linha = sr.ReadLine();
-                    do
+
+                    while (linha != null)
                     {
                         if (linha.Substring(indexInicial, indexFinal) != identificador)
                             dados.Add(linha);
 
                         linha = sr.ReadLine();
-                    } while (linha != null);
+                    }
                 }
 
                 File.Delete(DataBase + setor);

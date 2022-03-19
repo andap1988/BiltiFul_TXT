@@ -103,7 +103,7 @@ namespace BiltiFulBD
 
                 do
                 {
-                    Console.Write(" Codigo do produto: ");
+                    Console.Write(" Codigo do produto (13 digitos no padrao EAN13): ");
                     cod = Console.ReadLine();
 
                     if (cod == "9")
